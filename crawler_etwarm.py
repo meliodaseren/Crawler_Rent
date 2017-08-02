@@ -10,10 +10,10 @@ from bs4 import BeautifulSoup
 # Type: 套房 (無雅房類型)
     # 依房屋類型結果搜尋不佳，改用關鍵字(套房、雅房)
 # Keyword: 套房、雅房
-    # [台北市套房: 22筆] http://www.etwarm.com.tw/rent/object_list?area=台北市&keyword=套房
-    # [新北市套房: 7筆] http://www.etwarm.com.tw/rent/object_list?area=新北市&keyword=套房
-    # [台北市雅房: 1筆] http://www.etwarm.com.tw/rent/object_list?area=台北市&keyword=雅房
-    # [新北市雅房: 2筆] http://www.etwarm.com.tw/rent/object_list?area=新北市&keyword=雅房
+    # [台北市套房: 22筆] http://www.etwarm.com.tw/rent/object_list?area=台北市&keyword=套房&page=1
+    # [新北市套房: 7筆] http://www.etwarm.com.tw/rent/object_list?area=新北市&keyword=套房&page=1
+    # [台北市雅房: 1筆] http://www.etwarm.com.tw/rent/object_list?area=台北市&keyword=雅房&page=1
+    # [新北市雅房: 2筆] http://www.etwarm.com.tw/rent/object_list?area=新北市&keyword=雅房&page=1
 
 # index page
 area_list = ['台北市', '新北市']
@@ -38,9 +38,9 @@ def getTotalPages(href):
     res.close()
     # 10 house objects in each page
     totalPages = math.ceil(totalPieces / 10)
-    return totalPages
+    return totalPieces, totalPages    # return tuple
 
-totalPages = getTotalPages(index)
+totalPieces, totalPages = getTotalPages(index)
 print("Total Pages: " + str(totalPages))
 
 print("--" * 20)
@@ -104,7 +104,7 @@ print("--" * 20)
 #         pass
 
 try:
-    for page in range(1, totalPages + 1):
+    for page in range(1, int(totalPages) + 1):
         indexf = index[:-1] + "{}"
         href = indexf.format(page)
         res = requests.get(href)
@@ -144,4 +144,4 @@ finally:
 # saveJson(job_lists_dict, "Job_104_" + str(jobcat) + ".json")
 
 # Check Crawler
-print(str(totalPages) + " Pages Done.")
+print(str(totalPieces) + " Objects / " + str(totalPages) + " Pages Done.")

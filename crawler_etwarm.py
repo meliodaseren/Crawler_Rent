@@ -45,62 +45,28 @@ print("Total Pages: " + str(totalPages))
 print("--" * 20)
 
 
-# create dictionary to export JSON
-# job_lists_dict = {
-#     "lists_url": index,
-#     "total_pages": totalPages,
-#     "lists_title": pageTitle,
-#     "job_lists": []
-# }
+# Get object information
+def rent_info(href):
+    try:
+        time.sleep(3)
+        res = requests.get(href)
+        soup = BeautifulSoup(res.text, "lxml")
 
+        data_basic = soup.select('ul[class="data_basic"] > li')
+        data_len = len(data_basic)
 
-# The function to get job information
-# def job_info(href):
-#     try:
-#         time.sleep(3)
-#         res = requests.get(href)
-#         soup = BeautifulSoup(res.text, "html5lib")  # Error lxml, html.parser
+        print("".join(data_basic[0].text.split()))
 
-#         if soup.select('head > title') != "104人力銀行─錯誤頁":
-#             job_company = soup.select('a')[1].text
-#             job_content = soup.select('div[class="content"] > p')[0].text
-#             job_uptime = soup.select('time[class="update"]')[0].text
+        for data in range(1, data_len - 1):
+            print(data_basic[data].text.split(":")[0])
+            print(data_basic[data].text.split(":")[1])
 
-#             reqs = soup.find_all(['dt', 'dd'])
-#             job_tools = ""
-#             job_skills = ""
-#             other_con = ""
+    except IndexError as e:
+        print(e, href)
 
-#             for i in range(0, len(reqs) - 1):
-#                 if "擅長工具" in reqs[i].text:
-#                     job_tools += reqs[i + 1].text
-#                 elif "工作技能" in reqs[i].text:
-#                     job_skills += reqs[i + 1].text
-#                 elif "其他條件" in reqs[i].text:
-#                     other_con += reqs[i + 1].text
+    finally:
+        pass
 
-#             job_info_dict = {
-#                 "company": job_company,
-#                 "content": job_content,
-#                 "tools": job_tools,
-#                 "skills": job_skills,
-#                 "post_date": job_uptime,
-#                 "other_condition": other_con
-#             }
-
-#             return job_info_dict
-
-#         else:
-#             print("404 Not Found")
-
-#     except IndexError as e:
-#         print(e, href)
-
-#     else:
-#         print("Other Exception: " + href)
-
-#     finally:
-#         pass
 
 try:
     for page in range(1, int(totalPages) + 1):
@@ -120,13 +86,15 @@ try:
             title = str(title).lstrip('[\'').rstrip('\']')
             href = obj_info[objName].select('a')[0]['href']
 
-            print(title)
-            print(href)
-
             count += 1
             # Check Crawler
             print("Scraping: " + str(count) + " (" + str(page) +
                   " / " + str(totalPages) + " Pages)" + "\n")
+
+            print(title)
+            print(href)
+
+            rent_info(href)
 
         time.sleep(5)
 
@@ -134,13 +102,13 @@ finally:
     pass
 
 
-# The function to write JSON data
-# def saveJson(data, fileName):
-#     with open(fileName, "w", encoding="utf8") as f:
-#         json.dump(data, f, ensure_ascii=False)
-#
-#
+# Write JSON
+def saveJson(data, fileName):
+    with open(fileName, "w", encoding="utf8") as f:
+        json.dump(data, f, ensure_ascii=False)
+
+
 # saveJson(job_lists_dict, "Job_104_" + str(jobcat) + ".json")
 
 # Check Crawler
-print(str(totalPieces) + " Objects / " + str(totalPages) + " Pages Done.")
+print(str(totalPieces) + " Objects, " + str(totalPages) + " Pages Done.")

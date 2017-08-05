@@ -1,5 +1,4 @@
 import requests
-import math
 import time
 import json
 from bs4 import BeautifulSoup
@@ -14,7 +13,7 @@ from bs4 import BeautifulSoup
 
 
 # Read Data List
-def ReadDataList(fileName):
+def readDataList(fileName):
     try:
         with open(fileName, "rt", encoding="utf-8") as f:
             data = f.read().lstrip('{\'').rstrip('\'}').split('\', \'')
@@ -24,8 +23,32 @@ def ReadDataList(fileName):
         print(e)
 
 
+href_list = readDataList("etwarm_set.txt")
+print(href_list)
+
+# Get HTML and System time
+try:
+    for href in href_list:
+        res = requests.get(href)
+        with open('./etwarm_html/%s.html' % href[-6:], 'w', encoding='utf-8') as f:
+            f.write(res.text)
+    time.sleep(3)
+finally:
+    pass
+
+
+# Write JSON
+def saveJson(data, filename):
+    with open(filename, "w", encoding="utf8") as f:
+        json.dump(data, f, ensure_ascii=False)
+
+# saveJson(job_lists_dict, "Job_104_" + str(jobcat) + ".json")
+
+
+# -------------------------------------------------- #
+
 # Get object information
-def rent_info(href):
+def getInfo(href):
     try:
         time.sleep(3)
         res = requests.get(href)
@@ -47,9 +70,6 @@ def rent_info(href):
         pass
 
 
-href_list = ReadDataList("etwarm_set.txt")
-print(href_list)
-
 # try:
 #     for href in href_list:
 #         res = requests.get(href)
@@ -60,11 +80,3 @@ print(href_list)
 #     time.sleep(3)
 # finally:
 #     pass
-
-
-# Write JSON
-def saveJson(data, fileName):
-    with open(fileName, "w", encoding="utf8") as f:
-        json.dump(data, f, ensure_ascii=False)
-
-# saveJson(job_lists_dict, "Job_104_" + str(jobcat) + ".json")

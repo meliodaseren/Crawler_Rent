@@ -18,9 +18,9 @@ from bs4 import BeautifulSoup
 
 
 # Read Data, and convert list of string to list to set
-def ReadData(fileName):
+def readData(filename):
     try:
-        with open(fileName, "rt", encoding="utf-8") as f:
+        with open(filename, "rt", encoding="utf-8") as f:
             data = set(f.read().lstrip('{\'').rstrip('\'}').split('\', \''))
             f.close()
             return data
@@ -41,7 +41,7 @@ def getTotalPages(href):
     return totalPieces, totalPages    # return tuple
 
 
-href_set = ReadData("etwarm_set.txt")
+href_set = readData("etwarm_set.txt")
 
 area_list = ["台北市", "新北市"]
 keyword_list = ["套房", "雅房"]
@@ -83,17 +83,19 @@ try:
                         # title = str(title).lstrip('[\'').rstrip('\']')
                         href = obj_info[objName].select('a')[0]['href']
 
-                        # Check if url exists in set
-                        if href in href_set:
-                            pass
-                        else:
-                            href_set.add(href)
-
                         count += 1
 
                         # Check Crawler
                         print("Scraping: " + str(count) + " (" + str(page) +
                               " / " + str(totalPages) + " Pages)")
+
+                        # Check if url exists in set
+                        if href in href_set:
+                            print("Pass: " + href + "\n")
+                            pass
+                        else:
+                            print("Update: " + href + "\n")
+                            href_set.add(href)
 
                     time.sleep(5)
             finally:
@@ -103,8 +105,8 @@ finally:
 
 
 # Write Data
-def saveData(data, fileName):
-    with open(fileName, "w") as f:
+def saveData(data, filename):
+    with open(filename, "w") as f:
         f.write(data)
 
 # print(href_list)

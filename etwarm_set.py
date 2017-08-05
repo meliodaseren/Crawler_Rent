@@ -1,7 +1,6 @@
 import requests
 import math
 import time
-import json
 from bs4 import BeautifulSoup
 
 # ----- Crawler Information ----- #
@@ -15,8 +14,20 @@ from bs4 import BeautifulSoup
 # 取得總筆數 (計算頁數以便迭代)
 # 取得每個房屋物件的標題 (以便除錯)
 # 取得每個房屋物件的連結
-    # 迭代進入每個連結，取得房屋物件的內容
 # ------------------------------- #
+
+
+# Read Data, and convert list of string to list to set
+def ReadData(fileName):
+    try:
+        with open(fileName, "rt", encoding="utf-8") as f:
+            data = set(f.read().lstrip('{\'').rstrip('\'}').split('\', \''))
+            f.close()
+            return data
+    except FileNotFoundError as e:
+        # If file not found, return empty set
+        data = set()
+        return data
 
 
 # Get total pages
@@ -30,31 +41,14 @@ def getTotalPages(href):
     return totalPieces, totalPages    # return tuple
 
 
-# Get object information
-def rent_info(href):
-    try:
-        time.sleep(3)
-        res = requests.get(href)
-        soup = BeautifulSoup(res.text, "lxml")
-
-        data_basic = soup.select('ul[class="data_basic"] > li')
-        data_len = len(data_basic)
-
-        print("租金 : " + "".join(data_basic[0].text.split()))
-
-        for data in range(1, data_len - 1):
-            print(data_basic[data].text.split(":")[0] + ":" +
-                  data_basic[data].text.split(":")[1])
-
-    except IndexError as e:
-        print(e, href)
-
-    finally:
-        pass
-
+href_set = ReadData("etwarm_set.txt")
 
 area_list = ["台北市", "新北市"]
 keyword_list = ["套房", "雅房"]
+
+# Count all objects and pages
+totalPieces_all = 0
+totalPages_all = 0
 
 try:
     for area in area_list:
@@ -66,7 +60,10 @@ try:
             print(str(area) + str(keyword))
             totalPieces, totalPages = getTotalPages(index)
             print("Total Pages: " + str(totalPages))
-            print("--" * 20 + "\n")
+            print("--" * 20)
+
+            totalPieces_all += totalPieces
+            totalPages_all += totalPages
 
             try:
                 for page in range(1, int(totalPages) + 1):
@@ -82,19 +79,21 @@ try:
                     count = 0
 
                     for objName in range(0, totalObj):
-                        title = obj_info[objName].select('a')[0].text.split()
-                        title = str(title).lstrip('[\'').rstrip('\']')
+                        # title = obj_info[objName].select('a')[0].text.split()
+                        # title = str(title).lstrip('[\'').rstrip('\']')
                         href = obj_info[objName].select('a')[0]['href']
 
+                        # Check if url exists in set
+                        if href in href_set:
+                            pass
+                        else:
+                            href_set.add(href)
+
                         count += 1
+
                         # Check Crawler
                         print("Scraping: " + str(count) + " (" + str(page) +
                               " / " + str(totalPages) + " Pages)")
-                        print(title)
-                        print(href)
-
-                        rent_info(href)
-                        print()
 
                     time.sleep(5)
             finally:
@@ -103,12 +102,13 @@ finally:
     pass
 
 
-# Write JSON
-def saveJson(data, fileName):
-    with open(fileName, "w", encoding="utf8") as f:
-        json.dump(data, f, ensure_ascii=False)
+# Write Data
+def saveData(data, fileName):
+    with open(fileName, "w") as f:
+        f.write(data)
 
-# saveJson(job_lists_dict, "Job_104_" + str(jobcat) + ".json")
+# print(href_list)
+saveData(str(href_set), "etwarm_set.txt")
 
 # Check Crawler
-print(str(totalPieces) + " Objects, " + str(totalPages) + " Pages Done.")
+print(str(totalPieces_all) + " Objects, " + str(totalPages_all) + " Pages Done.")

@@ -4,7 +4,7 @@ import json
 from bs4 import BeautifulSoup
 
 # ----- Crawler Information ----- #
-# [東森房屋 - 租屋] http://www.etwarm.com.tw/rent/object_list
+# [東森房屋租屋] http://www.etwarm.com.tw/rent/object_list
 
 # [流程]
 # 取得每個房屋物件的連結

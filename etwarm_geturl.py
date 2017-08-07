@@ -4,7 +4,7 @@ import time
 from bs4 import BeautifulSoup
 
 # ----- Crawler Information ----- #
-# [東森房屋 - 租屋] http://www.etwarm.com.tw/rent/object_list
+# [東森房屋租屋] http://www.etwarm.com.tw/rent/object_list
 # Area: 台北市、新北市
 # Type: 套房 (無雅房類型)
     # 依房屋類型結果搜尋不佳，改用關鍵字(套房、雅房)

@@ -37,15 +37,14 @@ finally:
     pass
 
 
+# -------------------------------------------------- #
+
 # Write JSON
 def saveJson(data, filename):
     with open(filename, "w", encoding="utf8") as f:
         json.dump(data, f, ensure_ascii=False)
 
 # saveJson(job_lists_dict, "Job_104_" + str(jobcat) + ".json")
-
-
-# -------------------------------------------------- #
 
 # Get object information
 def getInfo(href):

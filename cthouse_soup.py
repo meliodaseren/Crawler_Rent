@@ -53,21 +53,21 @@ for i in range(0, len(cthouse0)):
             "title": "",
             "address": "",
             "pattern": "NA",
-            "floor": 0,
-            "stories": 0,
-            "label": 0,
+            "floor": "NA",
+            "stories": "NA",
+            "label": "",
             "rent": 0,
             "lat": 0,
             "lng": 0,
             "sex": "NA",
             "space": 0,
             "smoke": "NA",
-            "pet": 0,
-            "cook": 0,
+            "pet": "NA",
+            "cook": "NA",
             "updateDate": data["update"],
             "landlord": "",
             "description": "",
-            "temp": 0
+            "temp": "NA"
         }
 
     except IndexError as e:

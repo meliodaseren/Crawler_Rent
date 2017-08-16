@@ -84,7 +84,9 @@ try:
                         print("Scraping: " + str(count) + " (" + str(page) +
                               " / " + str(totalPages) + " Pages)")
 
-                    time.sleep(5)
+                        time.sleep(3)
+
+                    time.sleep(3)
             finally:
                 pass
 finally:

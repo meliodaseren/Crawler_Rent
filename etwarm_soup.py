@@ -44,9 +44,9 @@ etwarm0 = re.findall("\.\/etwarm_json\\\\(\w+\.json)", etwarm[0])
 for i in range(1, len(etwarm)):
     etwarm0.extend(re.findall("\.\/etwarm_json\\\\(\w+\.json)", etwarm[i]))
 
-booleanDict = {
-    "可以": "Y", "不可以": "N", "無": "N"
-}
+# booleanDict = {
+#     "可以": "Y", "不可以": "N", "無": "N"
+# }
 
 for i in range(0, len(etwarm0)):
 

@@ -4,6 +4,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
+''' Warning: Need to Refactor a Code '''
 
 # Read Data List
 def readData(fileName):
@@ -61,37 +62,61 @@ for i in range(0, len(etwarm0)):
         cityID, lat, lng = getLocation(address)
 
         try:
-            space = float(''.join(re.findall('<span class="space">(\w+)坪</span>', str(data_basic))))
+            floor = int(''.join(re.findall('<li>樓層 : (\d+)\/\d+\(總樓層\)</li>', str(data_basic))))
         except:
-            "NA"
+            floor = "NA"
 
         try:
-            landlord = soup.select('section[id="obj_characteristic"]')[0].text
+            stories = int(''.join(re.findall('<li>樓層 : \d+\/(\d+)\(總樓層\)</li>', str(data_basic))))
         except:
-            "NA"
+            stories = "NA"
+
+        try:
+            label = ''.join(re.findall('<li>用途/型態 : \w*(套|雅)', str(data_basic)))
+        except:
+            label = "NA"
+
+        try:
+            rent = int(soup.select('div[class="obj_data_contain fl"]')[0]
+                           .select('span')[0].text.replace(',', ''))
+        except:
+            rent = "NA"
+
+        try:
+            space = float(''.join(re.findall('<span class="space">(\w+)坪</span>', str(data_basic))))
+        except:
+            space = "NA"
+
+        try:
+            landlord_name = soup.select('div[class="data_store"]')[0].text.split()[0]
+            landlord_re = str(soup.select('div[class="data_store"]')[0].text.split())
+            landlord_phone = str(''.join(re.findall('\d{10}', landlord_re)))
+            landlord = landlord_name + "," + landlord_phone
+        except:
+            landlord = "NA"
 
         try:
             description = soup.select('section[id="obj_characteristic"]')[0].text
         except:
-            "NA"
+            description = "NA"
 
         json_data = {
-            "id": "NA",
+            "id": "",
             "cityID": cityID,
             "url": data["url"],
             "title":
                 soup.select('div[class="obj_data_basic"]')[0].select('h1')[0].text,
             "address": address,
             "pattern": "NA",
-            "floor": 0,
-            "stories": 0,
-            "label": 0,
-            "rent": 0,
+            "floor": floor,
+            "stories": stories,
+            "label": label,
+            "rent": rent,
             "lat": lat,
             "lng": lng,
             "sex": "A",
             "space": space,
-            "smoke": "NA",
+            "smoke": "N",
             "pet": "N",
             "cook": "N",
             "updateDate": data["update"],

@@ -12,7 +12,7 @@ def getLocation(address):
     res.close()
     return lat, lng, cityID
 
-lat, lng, cityID = getLocation("新北市三重區介壽路39巷")
+lat, lng, cityID = getLocation("台北市大同區民生西路")
 
 print(lat)
 print(lng)

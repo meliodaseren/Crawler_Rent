@@ -61,53 +61,37 @@ for i in range(0, len(etwarm0)):
         address = str(re.findall('<li>地址 : (\w+)<\/li>', str(data_basic))).lstrip("\'\[").rstrip("\'\]")
         cityID, lat, lng = getLocation(address)
 
-        try:
-            floor = int(''.join(re.findall('<li>樓層 : (\d+)\/\d+\(總樓層\)</li>', str(data_basic))))
-        except:
-            floor = "NA"
+        floor = int(''.join(re.findall('<li>樓層 : (\d+)\/\d+\(總樓層\)</li>', str(data_basic))))
 
-        try:
-            stories = int(''.join(re.findall('<li>樓層 : \d+\/(\d+)\(總樓層\)</li>', str(data_basic))))
-        except:
-            stories = "NA"
+        stories = int(''.join(re.findall('<li>樓層 : \d+\/(\d+)\(總樓層\)</li>', str(data_basic))))
 
-        try:
-            label = ''.join(re.findall('<li>用途/型態 : \w*(套|雅)', str(data_basic)))
-        except:
-            label = "NA"
+        label = ''.join(re.findall('<li>用途/型態 : \w*(套|雅)', str(data_basic)))
 
-        try:
-            rent = int(soup.select('div[class="obj_data_contain fl"]')[0]
-                           .select('span')[0].text.replace(',', ''))
-        except:
-            rent = "NA"
+        rent = int(soup.select('div[class="obj_data_contain fl"]')[0]
+                       .select('span')[0].text.replace(',', ''))
 
-        try:
-            space = float(''.join(re.findall('<span class="space">(\w+)坪</span>', str(data_basic))))
-        except:
-            space = "NA"
+        space = float(''.join(re.findall('<span class="space">(\w+)坪</span>', str(data_basic))))
 
         try:
             landlord_name = soup.select('div[class="data_store"]')[0].text.split()[0]
+            landlord_name = re.findall('!?屋!?主(.+)', landlord_name)
+            landlord_name = str(landlord_name).lstrip("\'\[").rstrip("\'\]")
             landlord_re = str(soup.select('div[class="data_store"]')[0].text.split())
             landlord_phone = str(''.join(re.findall('\d{10}', landlord_re)))
             landlord = landlord_name + "," + landlord_phone
         except:
             landlord = "NA"
 
-        try:
-            description = soup.select('section[id="obj_characteristic"]')[0].text
-        except:
-            description = "NA"
+        description = ''.join(soup.select('section[id="obj_characteristic"]')[0]
+                                      .text.split()),
 
         json_data = {
-            "id": "",
             "cityID": cityID,
             "url": data["url"],
             "title":
                 soup.select('div[class="obj_data_basic"]')[0].select('h1')[0].text,
             "address": address,
-            "pattern": "NA",
+            "pattern": "水泥",
             "floor": floor,
             "stories": stories,
             "label": label,
@@ -119,9 +103,9 @@ for i in range(0, len(etwarm0)):
             "smoke": "N",
             "pet": "N",
             "cook": "N",
-            "updateDate": data["update"],
+            "update": data["update"],
             "landlord": landlord,
-            "description": description,
+            "description": str(description),
             "temp": "Y"
         }
 

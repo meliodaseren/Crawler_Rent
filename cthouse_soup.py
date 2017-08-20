@@ -62,12 +62,11 @@ for i in range(0, len(cthouse0)):
         space = float(''.join(re.findall('(\d+.?\d*)\s坪', house__introRow)))
 
         json_data = {
-            "id": "",
             "cityID": cityID,
             "url": data["url"],
             "title": soup.select('h2[class="house__id"]')[0].text,
             "address": address,
-            "pattern": "NA",
+            "pattern": "水泥",
             "floor": "NA",
             "stories": "NA",
             "label": "套",
@@ -81,10 +80,10 @@ for i in range(0, len(cthouse0)):
             "smoke": "N",
             "pet": "N",
             "cook": "N",
-            "updateDate": data["update"],
+            "update": data["update"],
             "landlord": "NA",
-            "description": soup.select('div[class="detail__foreword"]')[0]
-                               .text.strip(' \t\n\r'),
+            "description": str(''.join(soup.select('div[class="detail__foreword"]')[0]
+                                       .text.split())),
             "temp": "NA"
         }
 
